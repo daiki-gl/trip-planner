@@ -1,7 +1,15 @@
 import { useRef, useEffect, useState } from "react";
+import { Place } from "../../store/useTourPlanStore";
 // import Geocoder from "./Geocoder";
 
-const AutoComplete = ({setRes}:any) => {
+type AutoCompleteProps = {
+    setRes: React.Dispatch<React.SetStateAction<undefined>>,
+    setNames: React.Dispatch<any>,
+    setPlanData: React.Dispatch<any>
+    planData: any
+}
+
+const AutoComplete = ({setRes, setNames, planData, setPlanData}:AutoCompleteProps) => {
  const autoCompleteRef = useRef<any>();
  const inputRef = useRef<any>();
  const options = {
@@ -14,16 +22,39 @@ const AutoComplete = ({setRes}:any) => {
             inputRef.current,
             options
             );
- }, []);
-
- function addAddress() {
+    }, []);
+    
+    function addAddress() {
         autoCompleteRef.current.addListener("place_changed", async function () {
-        const place = await autoCompleteRef.current.getPlace();
-        console.log({ place });
-        setRes({location:place.geometry.location, name: place.name})
-        inputRef.current.value = ''
-       });
- }
+            const place = await autoCompleteRef.current.getPlace();
+            // console.log({ place });
+            setRes({location:place.geometry.location, name: place.name})
+            inputRef.current.value = ''
+
+            setNames((prev: string[] | undefined) => {
+                if (prev && prev.includes(place.name)) {
+                    return prev;
+                }
+                return [...(prev || []), place.name];
+                });
+
+                // setPlanData((prev: any | undefined) => (
+                //     {
+                //     ...prev,
+                //     place: [
+                //       ...(prev?.place || []),
+                //       {
+                //         location: place.geometry.location,
+                //         name: place.name
+                //       }
+                //     ]
+                //   }));
+            });
+    }
+        
+    // useEffect(() => {
+    //         console.log('>>>>>>>>>',planData);
+    // },[planData])
  
  return (
     <div className="mb-3">

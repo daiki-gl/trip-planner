@@ -9,7 +9,8 @@ type TourPlanProps = {
     _id?: string | null,
     title?: string | null,
     userId?: {
-        username: string
+        username: string,
+        _id: string
     } | null,
     note?: string | null,
     date?: string[] | null,
@@ -18,9 +19,19 @@ type TourPlanProps = {
     budgets: number,
 }
 
+
+
 const TourPlanCard = (props:TourPlanProps) => {
-    const {deletePlan} = useTourPlanStore()
+    const {deletePlan, getPlans} = useTourPlanStore()
     const { _id, title, userId, note, date} = props
+
+    const handlePlanDelete = async () => {
+        if (_id) {
+            await deletePlan(_id)
+           userId && getPlans(userId._id)
+        }
+    }
+
   return (
     <div className='bg-white rounded-lg text-gray-800 hover:shadow-2xl duration-300'>
         <Link to={`/plan/${_id}`} state={props} >
@@ -32,7 +43,7 @@ const TourPlanCard = (props:TourPlanProps) => {
         </Link>
         <div className='flex mt-3 items-end justify-end px-5 pb-5'>
             <Link to={`/plan/edit/${_id}`}><FiEdit /></Link>
-            <button className='ml-3' onClick={() => _id && deletePlan(_id)}><BsTrash /></button>
+            <button className='ml-3' onClick={handlePlanDelete}><BsTrash /></button>
         </div>
     </div>
   )

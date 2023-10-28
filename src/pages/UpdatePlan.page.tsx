@@ -6,15 +6,16 @@ import { Link } from 'react-router-dom'
 import Map from '../components/Map/Map'
 import AutoComplete from '../components/Map/Autocomplete'
 import PlaceName from '../components/PlaceName'
+// import { Place } from '../store/useTourPlanStore'
 
 const UpdatePlan = () => {
-    const { user } = useUserStore()
-    const {updatePlan, getPlanById, tourPlan} = useTourPlanStore()
+    const {updatePlan, getPlanById} = useTourPlanStore()
     const { id } = useParams()
     const [res, setRes] = useState()
     const [planData, setPlanData] = useState<any>()
+    const [names, setNames] = useState<any>()
 
-    const saveData = (e:React.FocusEvent<HTMLInputElement, Element>) => {
+    const saveData = (e:React.FocusEvent<HTMLTextAreaElement, Element> | React.FocusEvent<HTMLInputElement, Element>) => {
         const val = e.target.value
         const key = e.target.name
         if(id) {
@@ -28,16 +29,10 @@ const UpdatePlan = () => {
         })()
     },[])
 
-    // useEffect(() => {
-    //    res && setPlanData((prev) => ({...prev, 
-    //     place: [...prev.place , 
-    //     {name: res.name, location: 
-    //         {
-    //             lat: res.location.lat(),
-    //             lng: res.location.lng()
-    //         }}]}))
-    // },[res])
-    
+    useEffect(() => {
+        setNames(planData && planData.place.length > 0 && planData?.place.map((place:any) => place.name))
+        // console.log(planData?.place);
+    },[planData])
 
   return (
     <div className='mx-auto flex justify-between'>
@@ -52,7 +47,9 @@ const UpdatePlan = () => {
                 <label className='font-semibold' htmlFor="note">
                     Note:
                 </label>
-                    <textarea className='block w-full px-3 py-2 rounded-md' name='note' defaultValue={planData?.note && planData.note} id='note' placeholder='Enter something here...' onBlur={e => saveData(e)}></textarea>
+                    <textarea className='block w-full px-3 py-2 rounded-md' name='note' defaultValue={planData?.note && planData.note} id='note' 
+                    placeholder='Enter something here...' 
+                    onBlur={e => saveData(e)}></textarea>
             </div>
 
             <div className='mb-3'>
@@ -60,11 +57,14 @@ const UpdatePlan = () => {
             </div>
 
             <div className='mb-3'>
-                <AutoComplete setRes={setRes} />
+                <AutoComplete setRes={setRes} setNames={setNames} setPlanData={setPlanData} planData={planData} />
                 <ul>
                     {planData?.place?.length > 0 && planData.place?.map((place:any) => (
-                    <PlaceName key={place.name} data={planData.place} name={place.name} id={planData._id} />
+                    <PlaceName key={place.name} data={planData.place} name={place.name} id={planData._id} setPlanData={setPlanData} />
                     ))}
+                    {/* {planData && names?.length > 0 && names.map((name:any) => (
+                    <PlaceName key={name} data={planData?.place} name={name} id={planData._id} setPlanData={setPlanData} />
+                    ))} */}
                 </ul>
             </div>
 

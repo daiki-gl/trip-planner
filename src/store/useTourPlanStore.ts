@@ -5,7 +5,8 @@ type TourPlan = {
     _id: string | null,
     title: string | null,
     userId: {
-        username: string
+        username: string,
+        _id: string
     } | null,
     note: string | null,
     date: string[] | null,

@@ -21,7 +21,9 @@ const TourPlanPage = () => {
     const URL = import.meta.env.VITE_URL
 
     const findRoute = async () =>{
-      if(originDestination?.origin && originDestination?.destination) {
+      // if(originDestination?.origin && originDestination?.destination) {
+        //Try this later
+      if(originDestination) {
         const res = await fetch(`${URL}/getDirection`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},

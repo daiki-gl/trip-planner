@@ -1,22 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BsTrash } from 'react-icons/bs'
 import { useTourPlanStore } from '../store'
 
 type PlaceNameProps = {
     id: string,
-    data: {
+    data?: {
         name: string,
         location: google.maps.LatLng
     }[],
     name: string
+    setPlanData: React.Dispatch<any>
 }
 
-const PlaceName = ({id,data,name}:PlaceNameProps) => {
-    const {updatePlan} = useTourPlanStore()
-
-    const deletePlace = () => {
+const PlaceName = ({id,data,name, setPlanData}:PlaceNameProps) => {
+    const {updatePlan, getPlanById} = useTourPlanStore()
+    const deletePlace = async() => {
         const remainData = data.filter(data =>  name !== data.name)
-        updatePlan(remainData, 'place', id)
+        await updatePlan(remainData, 'place', id).then( async() => {
+            const _data = await getPlanById(id)
+            setPlanData(_data)
+        })
     }
 
   return (
