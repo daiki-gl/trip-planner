@@ -2,17 +2,25 @@ import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import MyMapComponent from "../MyMapComponent";
 import { Place } from "../../store/useTourPlanStore";
 
-type MapProps = {
+export type MapProps = {
   data?: any,
   place?: Place
   originDestination?: {
-    origin: Place,
-    destination: Place
+    // origin: Place,
+    // destination: Place
+    origin: {
+      lat: any,
+      lng: any,
+    },
+    destination: {
+      lat: any,
+      lng: any
+    }
   }
 }
 
 const Map = ({data, place, originDestination}: MapProps) => {
-  const render = (status:string) => {
+  const render = (status:Status) => {
   switch (status) {
     case Status.LOADING:
       return <p>Loading...</p>;
@@ -23,8 +31,9 @@ const Map = ({data, place, originDestination}: MapProps) => {
   }
 };
   return (
-    <Wrapper apiKey={import.meta.env.VITE_GOOGLE_API_KEY} render= {render}>
-    </Wrapper>
+    <>
+    <Wrapper apiKey={import.meta.env.VITE_GOOGLE_API_KEY} render= {render}></Wrapper>
+    </>
   )
 }
 

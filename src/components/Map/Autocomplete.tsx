@@ -3,7 +3,7 @@ import { Place } from "../../store/useTourPlanStore";
 // import Geocoder from "./Geocoder";
 
 type AutoCompleteProps = {
-    setRes: React.Dispatch<React.SetStateAction<undefined>>,
+    setRes: React.Dispatch<React.SetStateAction<any>>,
     setNames: React.Dispatch<any>,
     setPlanData: React.Dispatch<any>
     planData: any

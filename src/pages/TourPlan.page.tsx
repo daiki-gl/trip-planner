@@ -5,18 +5,38 @@ import Map from '../components/Map/Map'
 import VisitPlace from '../components/VisitPlace'
 import { Place } from '../store/useTourPlanStore'
 
+// type OriginDestinationProps = {
+//   originDestination?: 
+//   {
+//     origin: Place,
+//     destination: Place
+//   }
+// }
+
 type OriginDestinationProps = {
-  originDestination?: {
-    origin: Place,
-    destination: Place
-  }
+  // originDestination?: {
+  //   origin: Place,
+  //   destination: Place
+  // }
+    // originDestination?: {
+      origin: {
+          lat: number;
+          lng: number;
+      };
+      destination: {
+          lat: number;
+          lng: number;
+      };
+  // }
 }
+
 
 const TourPlanPage = () => {
     const {state} = useLocation()
     const {title, note, date, budgets, userId, place, placeNote} = state
     // console.log(state);
-    const [originDestination, setOriginDestination] = useState<OriginDestinationProps | null>()
+    // const [originDestination, setOriginDestination] = useState<OriginDestinationProps>()
+    const [originDestination, setOriginDestination] = useState<any>()
 
     const URL = import.meta.env.VITE_URL
 
@@ -36,7 +56,7 @@ const TourPlanPage = () => {
     const getSelectVal = (e:React.ChangeEvent<HTMLSelectElement>) => {
       const val = JSON.parse(e.target.value)
       const name = e.target.name
-      setOriginDestination((prev) => ({...prev ,[name]: val}))
+      setOriginDestination((prev:any) => ({...prev ,[name]: val}))
     }
     
     useEffect(() => {
@@ -108,7 +128,8 @@ const TourPlanPage = () => {
         <Link className='block mt-8 text-center font-semibold  bg-yellow-400 text-white px-5 py-2 rounded-md hover:bg-yellow-600 duration-300' to={'/'} >Back to Home</Link>
 
       </div>
-      <Map  place={place} originDestination={originDestination && originDestination} />
+
+        <Map  place={place} originDestination={originDestination} />
     </div>
   )
 }

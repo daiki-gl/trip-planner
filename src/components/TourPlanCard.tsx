@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { BsTrash } from 'react-icons/bs'
 import { FiEdit } from 'react-icons/fi'

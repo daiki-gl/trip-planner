@@ -1,16 +1,23 @@
 import { useState, useEffect, useRef } from 'react'
 import Marker from './Map/Marker';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useTourPlanStore } from '../store';
 import { Place } from '../store/useTourPlanStore';
-
 
 type MyMapComponentProps = {
     res?: any,
     place?: Place
     originDestination?: {
-      origin: Place,
-      destination: Place
+    //   origin: Place
+      origin: {
+        lat: any,
+        lng: any
+      }
+      destination: {
+        lat: any,
+        lng: any
+      }
+    //   destination: Place
     }
   }
 
@@ -51,7 +58,7 @@ function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
 
         useEffect(() => {
             // console.log(res, places);
-            res && setPlaces((prev) => {
+            res && setPlaces((prev:any) => {
                 console.log({prev});
                return [...(prev || []), res]
             }
@@ -120,7 +127,7 @@ function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
                   destination: destinationLatLng,
                   travelMode: 'DRIVING',
                 };
-                directionsServiceRef.current.route(request, (result, status) => {
+                directionsServiceRef.current.route(request, (result:any, status:any) => {
                     if (status === 'OK') {
                         directionsRendererRef.current.setDirections(result);
                     }
@@ -131,7 +138,7 @@ function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
     return (
         <>
             <div className='w-3/4 gmap' ref={ref} >
-                {places?.length > 0 && places.map((latLng:google.maps.LatLng, i:number) => (
+                {places?.length > 0 && places.map((latLng:any, i:number) => (
                     <Marker key={i} map={map} data={latLng.location} />
                 ))}
             </div>

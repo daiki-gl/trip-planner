@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTourPlanStore, useUserStore } from '../store'
 import { useNavigate } from 'react-router-dom'
 import TourPlanCard from '../components/TourPlanCard'
@@ -39,7 +39,7 @@ const Home = () => {
           <div className='flex flex-col h-[300px] items-center justify-center'>
             <div className='my-10'>
             <h2 className='text-6xl font-bold text-center mb-3'>PLANNING BEST TRIP</h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque obcaecati consequuntur consectetur, quos dolores nulla.</p>
+            <p className='text-lg font-semibold'>"Discover, Plan, and Explore with Trip Planner: Your Passport to Adventure!"</p>
             </div>
             <div>
               <button className='bg-yellow-400 rounded-lg px-10 py-3 hover:bg-yellow-600 duration-200' onClick={createNewPlan} >Create new plan</button>

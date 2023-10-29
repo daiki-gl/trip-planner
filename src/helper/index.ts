@@ -49,7 +49,7 @@ export async function getPlanById(id: string) {
 }
 
 export async function updatePlanData(
-  data: string | Date | Place,
+  data: string | string[] | Date | Place,
   key: string,
   id: string
 ) {
