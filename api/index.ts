@@ -4,7 +4,6 @@ require('dotenv').config()
 const cors = require('cors')
 const mongoose = require('mongoose')
 const MONGODB_URL = process.env.MONGODB_URL
-const ORIGIN_URL = process.env.ORIGIN_URL
 
 const {
   registerUser,
@@ -19,7 +18,7 @@ const {
   updatePlan,
 } = require('./controllers/TourPlan.controller')
 
-app.use(cors({ credentials: true, origin: ORIGIN_URL }))
+app.use(cors({ credentials: true, origin: process.env.ORIGIN_URL }))
 mongoose.connect(MONGODB_URL).then(() => console.log('Connected to DB'))
 app.use(express.json())
 
