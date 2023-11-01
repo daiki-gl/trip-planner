@@ -18,10 +18,10 @@ const {
   updatePlan,
 } = require('./controllers/TourPlan.controller')
 
-// app.use(cors({credentials: true, origin: 'http://localhost:5173'}));
-app.use(
-  cors({ credentials: true, origin: 'https://trip-planner-xi.vercel.app' })
-)
+app.use(cors({ credentials: true, origin: 'http://localhost:5174' }))
+// app.use(
+//   cors({ credentials: true, origin: 'https://trip-planner-xi.vercel.app' })
+// )
 mongoose.connect(MONGODB_URL).then(() => console.log('Connected to DB'))
 app.use(express.json())
 
