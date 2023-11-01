@@ -1,4 +1,3 @@
-import React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -6,6 +5,7 @@ import { useUserStore } from '../store'
 import { CredentialFormData } from '../types/index.type'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const schema = z.object({
     email: z.string()
@@ -33,7 +33,10 @@ const Signup = () => {
 
     const onSubmit = async(data:CredentialFormData) => {
        const res = await registerUser(data)
+
+       
        if(res?.ok) {
+        toast.success('Successfully signed up.')
         navigate('/login')
        }
     }

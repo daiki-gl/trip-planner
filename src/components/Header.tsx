@@ -11,7 +11,7 @@ const Header = () => {
             const _token = window.localStorage.getItem("token")
             if(!_token) {navigate('/login')}
         }
-        console.log(user);
+        console.log({user});
     },[])
 
     const logoutUser = () => {
@@ -29,13 +29,13 @@ const Header = () => {
             <ul className='flex justify-evenly w-1/4'>
                 <li><Link to={'/'}>Home</Link></li>
                 <li><Link to={'/'}>Contact us</Link></li>
-                {user && (
+                {user?.id && (
                     <li><button onClick={logoutUser}>Logout</button></li> 
                 )}
-              {!user && pathname !== '/login' && (
+              {!user?.id && pathname !== '/login' && (
                 <li><Link to={'/login'}>Login</Link></li>
               )}
-              {!user && pathname !== '/register' && (
+              {!user?.id && pathname !== '/register' && (
                   <li><Link to={'/register'}>Sign up</Link></li>
               )} 
             </ul>

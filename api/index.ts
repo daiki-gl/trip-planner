@@ -4,6 +4,7 @@ require('dotenv').config()
 const cors = require('cors')
 const mongoose = require('mongoose')
 const MONGODB_URL = process.env.MONGODB_URL
+const ORIGIN_URL = process.env.ORIGIN_URL
 
 const {
   registerUser,
@@ -18,10 +19,7 @@ const {
   updatePlan,
 } = require('./controllers/TourPlan.controller')
 
-app.use(cors({ credentials: true, origin: 'http://localhost:5174' }))
-// app.use(
-//   cors({ credentials: true, origin: 'https://trip-planner-xi.vercel.app' })
-// )
+app.use(cors({ credentials: true, origin: ORIGIN_URL }))
 mongoose.connect(MONGODB_URL).then(() => console.log('Connected to DB'))
 app.use(express.json())
 
