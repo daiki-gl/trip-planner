@@ -16,12 +16,17 @@ export async function register(data: CredentialFormData) {
 }
 
 export async function login(data: CredentialFormData) {
+  console.log(URL)
   const { password, email } = data
-  const res = await fetch(`${URL}/login`, {
-    method: 'POST',
-    body: JSON.stringify({ password, email }),
-    headers: { 'Content-Type': 'application/json' },
-  })
+  // const res = await fetch(`${URL}/login`, {
+  const res = await fetch(
+    `https://trip-planner-backend-production.up.railway.app/login`,
+    {
+      method: 'POST',
+      body: JSON.stringify({ password, email }),
+      headers: { 'Content-Type': 'application/json' },
+    }
+  )
   return res
 }
 
