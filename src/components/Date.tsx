@@ -10,7 +10,6 @@ type DateProps = {
 
 const Date = ({id}:DateProps) => {
     const {updatePlan} = useTourPlanStore()
-    // const [dateRange, setDateRange] = useState<any>([moment(), moment()]);
     const { RangePicker } = DatePicker;
 
     const saveDate = (x: moment.LocaleSpecification) => {

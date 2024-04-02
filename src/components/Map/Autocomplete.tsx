@@ -1,22 +1,16 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { Place, PlanData } from "../../types/index.type";
-// import { Place } from "../../store/useTourPlanStore";
-// import Geocoder from "./Geocoder";
 
 type AutoCompleteProps = {
     setRes: React.Dispatch<React.SetStateAction<Place | undefined>>,
-    setNames: React.Dispatch<string[]>,
-    setPlanData: React.Dispatch<React.SetStateAction<PlanData | undefined>>,
-    planData: PlanData | undefined,
     names?: string[]
 }
 
-const AutoComplete = ({setRes, setNames, planData, setPlanData, names}:AutoCompleteProps) => {
+const AutoComplete = ({setRes, names}:AutoCompleteProps) => {
  const autoCompleteRef = useRef<any>();
  const inputRef = useRef<HTMLInputElement>(null);
  const options = {
   fields: ["address_components", "geometry", "icon", "name"],
-//   types: ["establishment"]
  };
 
  useEffect(() => {
@@ -40,25 +34,6 @@ const AutoComplete = ({setRes, setNames, planData, setPlanData, names}:AutoCompl
                     return [...(names[i] || []), place]
                 }
             }
-
-            // setNames((prev: string[] | undefined) => {
-            //     if (prev && prev.includes(place.name)) {
-            //         return prev;
-            //     }
-            //     return [...(prev || []), place.name];
-            //     });
-
-                // setPlanData((prev: planData| undefined) => (
-                //     {
-                //     ...prev,
-                //     place: [
-                //       ...(prev?.place || []),
-                //       {
-                //         location: place.geometry.location,
-                //         name: place.name
-                //       }
-                //     ]
-                //   }));
             });
     }
  

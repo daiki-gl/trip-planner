@@ -5,7 +5,6 @@ import { useUserStore } from '../store'
 import { CredentialFormData } from '../types/index.type'
 import { useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
-
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom'
 
@@ -23,8 +22,6 @@ const Login = () => {
     const {register, handleSubmit, formState: {errors, isLoading}} = useForm<CredentialFormData>({
         resolver: zodResolver(schema)
     })
-
-    
     const navigate = useNavigate()
     
     const onSubmit = async (data:CredentialFormData) => {

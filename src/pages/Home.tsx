@@ -38,7 +38,7 @@ const Home = () => {
         <div className='-mt-[68px] bg-[url("./assets/bg-image.jpg")] bg-no-repeat bg-cover min-h-[500px] pt-[68px] px-10'>
           <div className='flex flex-col h-[300px] items-center justify-center'>
             <div className='my-10'>
-            <h2 className='text-6xl font-bold text-center mb-3'>PLANNING BEST TRIP</h2>
+            <h2 className='text-4xl md:text-6xl font-bold text-center mb-3'>PLANNING BEST TRIP</h2>
             <p className='text-lg font-semibold'>"Discover, Plan, and Explore with Trip Planner: Your Passport to Adventure!"</p>
             </div>
             <div>
@@ -48,9 +48,9 @@ const Home = () => {
         </div>
       )}
 
-      <div className="container my-8 px-3">
+      <div className="container px-5 my-8 mx-0 xl:mx-auto">
         <h3 className="text-3xl font-bold mb-3">Your Plan <span className='text-sm'> (name: {user?.username})</span></h3>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto">
         {tourPlans && tourPlans?.length > 0 && tourPlans.map(plan => (
           <TourPlanCard key={plan._id} {...plan} />
           ))

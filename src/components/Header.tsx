@@ -22,10 +22,10 @@ const Header = () => {
       const bgColor = pathname.includes('plan') ? 'bg-white text-gray-700' : ''
 
   return (
-    <header className={`py-4 relative z-10 w-screen ${bgColor}`}>
+    <header className={`py-2 md:py-4 px-4 relative z-10 w-screen ${bgColor}`}>
         <nav className='flex justify-between container mx-auto items-center'>
-            <Link to={'/'}><h1 className='text-3xl font-bold'>TRIP PLANNER</h1></Link>
-            <ul className='flex justify-evenly w-1/4'>
+            <Link to={'/'}><h1 className='md:text-3xl font-bold'>TRIP PLANNER</h1></Link>
+            <ul className='flex justify-evenly w-7/12 md:w-2/5 lg:w-1/4'>
                 <li><Link to={'/'}>Home</Link></li>
                 <li><Link to={'/'}>Contact us</Link></li>
                 {user?.id && (

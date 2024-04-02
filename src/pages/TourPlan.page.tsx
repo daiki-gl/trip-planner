@@ -2,39 +2,17 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import Map from '../components/Map/Map'
-import { Place } from '../types/index.type'
-
-type OriginDestinationProps = {
-  // originDestination?: {
-  //   origin: Place,
-  //   destination: Place
-  // }
-    // originDestination?: {
-      // origin?: {
-      //     lat: number;
-      //     lng: number;
-      // };
-      // destination?: {
-      //     lat: number;
-      //     lng: number;
-      // };
-
-        origin?: google.maps.LatLng
-        destination?: google.maps.LatLng
-  // }
-}
-
+import { OriginDestinationProps, Place } from '../types/index.type'
 
 const TourPlanPage = () => {
     const {state} = useLocation()
-    const {title, note, date, budgets, userId, place, placeNote} = state
+    const {title, note, date, budgets, place, placeNote} = state
     const [originDestination, setOriginDestination] = useState<OriginDestinationProps>()
 
     const URL = import.meta.env.VITE_URL
 
     const findRoute = async () =>{
       if(originDestination?.origin && originDestination?.destination) {
-        //Try this later
       if(originDestination) {
         const res = await fetch(`${URL}/getDirection`, {
           method: 'POST',
@@ -59,8 +37,8 @@ const TourPlanPage = () => {
     },[originDestination])
 
   return (
-    <div className='mx-auto flex justify-between min-h-screen'>
-      <div className='relative py-6 px-4 bg-blue-100 text-gray-800 w-1/4 min-h-screen'>
+    <div className='flex flex-col-reverse md:flex-row justify-end md:justify-between min-h-screen'>
+      <div className='py-6 px-4 bg-blue-100 text-gray-800 w-full md:w-1/4 min-w-[250px] md:min-h-screen flex-grow md:flex-grow-0'>
         <h1 className='text-xl font-bold mb-3'>{title || 'No title'}</h1>
 
         <div className='bg-white rounded-md pt-3 px-3 mb-3 overflow-y-auto min-h-20 max-h-[200px] font-semibold'>Note: 
@@ -117,10 +95,9 @@ const TourPlanPage = () => {
         )}
 
         <Link className='block mt-8 text-center font-semibold  bg-yellow-400 text-white px-5 py-2 rounded-md hover:bg-yellow-600 duration-300' to={'/'} >Back to Home</Link>
+        </div>
 
-      </div>
-
-        <Map  place={place} originDestination={originDestination} />
+        <Map place={place} originDestination={originDestination} />
     </div>
   )
 }

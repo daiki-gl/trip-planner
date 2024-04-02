@@ -8,7 +8,6 @@ type latLngType = {
 const Marker = ({map, data}: {map: google.maps.Map, data: google.maps.LatLng}) => {
     const [marker, setMarker] = useState<google.maps.Marker>();
     const [latLng, setLatLng ] = useState<latLngType>()
-    // const [latLng, setLatLng ] = useState<google.maps.LatLng>()
 
           useEffect(() => {
             if (!marker) {
@@ -29,7 +28,6 @@ const Marker = ({map, data}: {map: google.maps.Map, data: google.maps.LatLng}) =
               marker.setOptions(latLng as google.maps.MarkerOptions);
             }
           },[latLng])
-
 
   return null
 }

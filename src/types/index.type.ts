@@ -23,3 +23,22 @@ export type PlanData = {
   }
   _id: string
 }
+
+export type TourPlan = {
+  _id: string | null
+  title: string | null
+  userId: {
+    username: string
+    _id: string
+  } | null
+  note: string | null
+  date: string[] | null
+  place: Place | null
+  placeNote: string[] | null
+  budgets: number
+}
+
+export type OriginDestinationProps = {
+  origin?: google.maps.LatLng
+  destination?: google.maps.LatLng
+}

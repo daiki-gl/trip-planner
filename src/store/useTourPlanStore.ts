@@ -7,26 +7,7 @@ import {
   getPlans,
   updatePlanData,
 } from '../helper'
-import { Place, PlanData } from '../types/index.type'
-
-export type TourPlan = {
-  _id: string | null
-  title: string | null
-  userId: {
-    username: string
-    _id: string
-  } | null
-  note: string | null
-  date: string[] | null
-  place: Place | null
-  placeNote: string[] | null
-  budgets: number
-}
-
-// export type Place = {
-//   name: string
-//   location: google.maps.LatLng
-// }[]
+import { Place, PlanData, TourPlan } from '../types/index.type'
 
 type TourPlanStore = {
   tourPlan: TourPlan

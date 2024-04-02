@@ -1,16 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
 body {
     background-color: rgb(96 165 250 / 1);
 }
-
 input, textarea {
     color: #171717;
 }
-
 .gmap {
-    height: calc(100vh - 68px);
+    min-height: 100vh;
 }
+
+@media (max-width: 768px) {
+    .gmap {
+        min-height: 400px;
+        width: 100vw;
+    }
+    .ant-picker-dropdown .ant-picker-panel-container {
+        max-width: 92vw !important;
+        overflow: auto !important;
+        inset: 51.9333px auto auto 0px !important;
+    }
+}
+

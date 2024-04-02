@@ -2,26 +2,10 @@ import { Link } from 'react-router-dom'
 import { BsTrash } from 'react-icons/bs'
 import { FiEdit } from 'react-icons/fi'
 import { useTourPlanStore } from '../store'
-import { Place } from '../types/index.type'
+import { TourPlan } from '../types/index.type'
 
 
-type TourPlanProps = { 
-    _id?: string | null,
-    title?: string | null,
-    userId?: {
-        username: string,
-        _id: string
-    } | null,
-    note?: string | null,
-    date?: string[] | null,
-    place: Place | null,
-    placeNote: string[] | null,
-    budgets: number,
-}
-
-
-
-const TourPlanCard = (props:TourPlanProps) => {
+const TourPlanCard = (props:TourPlan) => {
     const {deletePlan, getPlans} = useTourPlanStore()
     const { _id, title, userId, note, date} = props
 
@@ -38,10 +22,10 @@ const TourPlanCard = (props:TourPlanProps) => {
             <div className='px-5 pt-5'>
             <h1 className='text-xl font-bold'>{title || 'No title'}</h1>
             <span className='text-xs text-slate-400'>Date: {date && `${date[0]} -  ${date[1]}`}</span>
-            <p>{note}</p>
+            <p className='line-clamp-2'>{note}</p>
             </div>
         </Link>
-        <div className='flex mt-3 items-end justify-end px-5 pb-5'>
+        <div className='flex mt-3 items-end justify-start md:justify-end px-5 pb-5'>
             <Link to={`/plan/edit/${_id}`}><FiEdit /></Link>
             <button className='ml-3' onClick={handlePlanDelete}><BsTrash /></button>
         </div>

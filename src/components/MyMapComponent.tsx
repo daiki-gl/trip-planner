@@ -3,27 +3,20 @@ import Marker from './Map/Marker';
 import { useLocation, useParams } from 'react-router-dom';
 import { useTourPlanStore } from '../store';
 import { KeyVal } from '../helper';
-import { Place } from '../types/index.type';
+import { OriginDestinationProps, Place } from '../types/index.type';
 
 type MyMapComponentProps = {
-    res?: {
-        location: google.maps.LatLng,
-        name: string
-    },
+    res?: Place,
     place?: Place[]
-    originDestination?: {
-    origin?: google.maps.LatLng
-    destination?: google.maps.LatLng
-    }
+    originDestination?: OriginDestinationProps
   }
 
-  type LatLngType = {
-    lat: number
-    lng: number
-  }
+type LatLngType = {
+lat: number
+lng: number
+}
 
 function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
-// function MyMapComponent({res, place}:MyMapComponentProps) {
         const ref = useRef<HTMLDivElement>(null);
         const [map, setMap] = useState<google.maps.Map>();
         const [places, setPlaces] = useState<Place[]>([]);
@@ -31,6 +24,10 @@ function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
         const { id } = useParams()
         const [newLatLng, setNewLatLng] = useState<LatLngType>()
         const {pathname} = useLocation()
+        const directionsServiceRef = useRef<google.maps.DirectionsService | null>(null);
+        const directionsRendererRef = useRef<google.maps.DirectionsRenderer | null>(null);
+        const [originLatLng, setOriginLatLng] = useState<google.maps.LatLng | null>(null);
+        const [destinationLatLng, setDestinationLatLng] = useState<google.maps.LatLng | null>(null);
 
         const saveData = (val:Place[], key: string) => {
             id && updatePlan(val, key as keyof KeyVal, id)
@@ -75,39 +72,13 @@ function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
             places?.length > 0 && saveData(places, 'place')
         },[places])
 
-        const directionsServiceRef = useRef<google.maps.DirectionsService | null>(null);
-        const directionsRendererRef = useRef<google.maps.DirectionsRenderer | null>(null);
-        const [originLatLng, setOriginLatLng] = useState<google.maps.LatLng | null>(null);
-        const [destinationLatLng, setDestinationLatLng] = useState<google.maps.LatLng | null>(null);
-
         if(!pathname.includes('edit')) {
-            // Optimize root
-
             useEffect(() => {
-
                 if(originDestination?.origin && originDestination?.destination) {
                     const {origin, destination} = originDestination
                     setOriginLatLng(new google.maps.LatLng(Number(origin.lat), Number(origin.lng)))
                     setDestinationLatLng(new google.maps.LatLng(Number(destination.lat), Number(destination.lng)))
-                // const originLatLng = new google.maps.LatLng(origin.lat, origin.lng);
-                // const destinationLatLng = new google.maps.LatLng(destination.lat, destination.lng);
-            
-                //       const directionsService = new google.maps.DirectionsService();
-                //       const directionsRenderer = new google.maps.DirectionsRenderer({ map });
-                    
-                //       const request = {
-                //         origin: originLatLng,
-                //         destination: destinationLatLng,
-                //         travelMode: 'DRIVING',
-                //       };
-        
-                //       directionsService.route(request, function (result, status) {
-                //         if (status === 'OK') {
-                //           directionsRenderer.setDirections(result);
-                //         }
-                //       });
-                
-            }
+                }
             },[originDestination])
 
             useEffect(() => {
@@ -122,11 +93,11 @@ function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
                   destination: destinationLatLng,
                   travelMode: 'DRIVING' as google.maps.TravelMode,
                 };
-                    directionsServiceRef.current?.route(request as google.maps.DirectionsRequest, (result, status) => {
-                           if (status === 'OK') {
-                               directionsRendererRef.current?.setDirections(result);
-                           }
-                       });
+                directionsServiceRef.current?.route(request as google.maps.DirectionsRequest, (result, status) => {
+                        if (status === 'OK') {
+                            directionsRendererRef.current?.setDirections(result);
+                        }
+                });
             };
         }
       
