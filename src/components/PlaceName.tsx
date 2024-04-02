@@ -1,6 +1,8 @@
 import React from 'react'
 import { BsTrash } from 'react-icons/bs'
 import { useTourPlanStore } from '../store'
+import { PlanData } from '../types/index.type'
+import { KeyVal } from '../helper'
 
 type PlaceNameProps = {
     id: string,
@@ -9,14 +11,14 @@ type PlaceNameProps = {
         location: google.maps.LatLng
     }[],
     name: string
-    setPlanData: React.Dispatch<any>
+    setPlanData: React.Dispatch<PlanData | undefined>
 }
 
 const PlaceName = ({id,data,name, setPlanData}:PlaceNameProps) => {
     const {updatePlan, getPlanById} = useTourPlanStore()
     const deletePlace = async() => {
         const remainData = data!.filter(data =>  name !== data.name)
-        await updatePlan(remainData, 'place', id).then( async() => {
+        await updatePlan(remainData, 'place' as keyof KeyVal, id).then( async() => {
             const _data = await getPlanById(id)
             setPlanData(_data)
         })

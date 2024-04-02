@@ -1,13 +1,15 @@
 import { create } from 'zustand'
 import {
+  KeyVal,
   createPlan,
   deletePlan,
   getPlanById,
   getPlans,
   updatePlanData,
 } from '../helper'
+import { Place, PlanData } from '../types/index.type'
 
-type TourPlan = {
+export type TourPlan = {
   _id: string | null
   title: string | null
   userId: {
@@ -21,20 +23,20 @@ type TourPlan = {
   budgets: number
 }
 
-export type Place = {
-  name: string
-  location: google.maps.LatLng
-}[]
+// export type Place = {
+//   name: string
+//   location: google.maps.LatLng
+// }[]
 
 type TourPlanStore = {
   tourPlan: TourPlan
   tourPlans: TourPlan[] | null
   error: string | null
   getPlans: (id: string) => void
-  getPlanById: (id: string) => void
+  getPlanById: (id: string) => Promise<PlanData | undefined>
   updatePlan: (
-    data: string | string[] | Date | Place,
-    key: string,
+    data: Place[] | string | string[] | Date | number,
+    key: keyof KeyVal,
     id: string
   ) => Promise<Response | undefined>
   createPlan: (token: string) => Promise<Response | undefined>
@@ -71,7 +73,7 @@ const useTourPlanStore = create<TourPlanStore>((set) => ({
       const res = await getPlanById(id)
       const tourPlan = await res.json()
       set({ tourPlan })
-      return tourPlan
+      return tourPlan as PlanData
     } catch (e) {
       const error = (e as Error).message
       set({ error })
@@ -81,7 +83,6 @@ const useTourPlanStore = create<TourPlanStore>((set) => ({
   updatePlan: async (data, key, id) => {
     try {
       const res = await updatePlanData(data, key, id)
-      // console.log(await res.json());
       return res
     } catch (e) {
       const error = (e as Error).message
@@ -100,7 +101,6 @@ const useTourPlanStore = create<TourPlanStore>((set) => ({
   deletePlan: async (id) => {
     try {
       const res = await deletePlan(id)
-      console.log(await res.json())
     } catch (e) {
       const error = (e as Error).message
       set({ error })

@@ -1,17 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import Map from '../components/Map/Map'
-import VisitPlace from '../components/VisitPlace'
-import { Place } from '../store/useTourPlanStore'
-
-// type OriginDestinationProps = {
-//   originDestination?: 
-//   {
-//     origin: Place,
-//     destination: Place
-//   }
-// }
+import { Place } from '../types/index.type'
 
 type OriginDestinationProps = {
   // originDestination?: {
@@ -19,14 +10,17 @@ type OriginDestinationProps = {
   //   destination: Place
   // }
     // originDestination?: {
-      origin: {
-          lat: number;
-          lng: number;
-      };
-      destination: {
-          lat: number;
-          lng: number;
-      };
+      // origin?: {
+      //     lat: number;
+      //     lng: number;
+      // };
+      // destination?: {
+      //     lat: number;
+      //     lng: number;
+      // };
+
+        origin?: google.maps.LatLng
+        destination?: google.maps.LatLng
   // }
 }
 
@@ -34,14 +28,12 @@ type OriginDestinationProps = {
 const TourPlanPage = () => {
     const {state} = useLocation()
     const {title, note, date, budgets, userId, place, placeNote} = state
-    // console.log(state);
-    // const [originDestination, setOriginDestination] = useState<OriginDestinationProps>()
-    const [originDestination, setOriginDestination] = useState<any>()
+    const [originDestination, setOriginDestination] = useState<OriginDestinationProps>()
 
     const URL = import.meta.env.VITE_URL
 
     const findRoute = async () =>{
-      // if(originDestination?.origin && originDestination?.destination) {
+      if(originDestination?.origin && originDestination?.destination) {
         //Try this later
       if(originDestination) {
         const res = await fetch(`${URL}/getDirection`, {
@@ -51,21 +43,20 @@ const TourPlanPage = () => {
         })
         return res
       }
+      }
     }
 
     const getSelectVal = (e:React.ChangeEvent<HTMLSelectElement>) => {
       const val = JSON.parse(e.target.value)
       const name = e.target.name
-      setOriginDestination((prev:any) => ({...prev ,[name]: val}))
+      setOriginDestination((prev) => ({...prev ,[name]: val}))
     }
     
     useEffect(() => {
       (async() => {
         const res = await findRoute()
-        console.log(await res?.json());
       })()
     },[originDestination])
-
 
   return (
     <div className='mx-auto flex justify-between min-h-screen'>
@@ -89,7 +80,7 @@ const TourPlanPage = () => {
         <div className='bg-white rounded-md p-3 my-3'>
           <p className='font-semibold' >Visit Place: </p>
             <ul>
-              {place?.length > 0 && place.map((_place:any) => (
+              {place?.length > 0 && place.map((_place:Place) => (
                 <li className='ml-4 list-disc' key={_place.name}>{_place.name}</li>
                 ))}
             </ul>
@@ -107,7 +98,7 @@ const TourPlanPage = () => {
                 ORIGIN: 
               <select className='block w-full mt-1 px-3 py-2 rounded-md' onChange={(e) => getSelectVal(e)} name="origin">
                 <option value="" defaultChecked>Select the place</option>
-                    {place?.length > 0 && place.map((_place: any) => (
+                    {place?.length > 0 && place.map((_place: Place) => (
                       <option key={_place.name} value={JSON.stringify(_place.location)}>{_place.name}</option>
                       ))}
               </select>
@@ -117,7 +108,7 @@ const TourPlanPage = () => {
           DESTINATION:
             <select className='block w-full mt-1 px-3 py-2 rounded-md' onChange={(e) => getSelectVal(e)} name="destination">
             <option value="" defaultChecked>Select the place</option>
-                  {place?.length > 0 && place.map((_place: any) => (
+                  {place?.length > 0 && place.map((_place: Place) => (
                     <option key={_place.name} value={JSON.stringify(_place.location)}>{_place.name}</option>
                     ))}
             </select>

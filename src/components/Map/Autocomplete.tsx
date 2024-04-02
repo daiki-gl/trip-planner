@@ -1,17 +1,19 @@
 import { useRef, useEffect, useState } from "react";
-import { Place } from "../../store/useTourPlanStore";
+import { Place, PlanData } from "../../types/index.type";
+// import { Place } from "../../store/useTourPlanStore";
 // import Geocoder from "./Geocoder";
 
 type AutoCompleteProps = {
-    setRes: React.Dispatch<React.SetStateAction<any>>,
-    setNames: React.Dispatch<any>,
-    setPlanData: React.Dispatch<any>
-    planData: any
+    setRes: React.Dispatch<React.SetStateAction<Place | undefined>>,
+    setNames: React.Dispatch<string[]>,
+    setPlanData: React.Dispatch<React.SetStateAction<PlanData | undefined>>,
+    planData: PlanData | undefined,
+    names?: string[]
 }
 
-const AutoComplete = ({setRes, setNames, planData, setPlanData}:AutoCompleteProps) => {
+const AutoComplete = ({setRes, setNames, planData, setPlanData, names}:AutoCompleteProps) => {
  const autoCompleteRef = useRef<any>();
- const inputRef = useRef<any>();
+ const inputRef = useRef<HTMLInputElement>(null);
  const options = {
   fields: ["address_components", "geometry", "icon", "name"],
 //   types: ["establishment"]
@@ -19,7 +21,7 @@ const AutoComplete = ({setRes, setNames, planData, setPlanData}:AutoCompleteProp
 
  useEffect(() => {
         autoCompleteRef.current = new window.google.maps.places.Autocomplete(
-            inputRef.current,
+            inputRef.current!,
             options
             );
     }, []);
@@ -27,18 +29,26 @@ const AutoComplete = ({setRes, setNames, planData, setPlanData}:AutoCompleteProp
     function addAddress() {
         autoCompleteRef.current.addListener("place_changed", async function () {
             const place = await autoCompleteRef.current.getPlace();
-            // console.log({ place });
             setRes({location:place.geometry.location, name: place.name})
-            inputRef.current.value = ''
+            inputRef.current!.value = ''
 
-            setNames((prev: string[] | undefined) => {
-                if (prev && prev.includes(place.name)) {
-                    return prev;
+            if(names) {
+                for(let i = 0; i > names.length ; i++) {
+                    if(names[i].includes(place.name)) {
+                        return names[i]
+                    }
+                    return [...(names[i] || []), place]
                 }
-                return [...(prev || []), place.name];
-                });
+            }
 
-                // setPlanData((prev: any | undefined) => (
+            // setNames((prev: string[] | undefined) => {
+            //     if (prev && prev.includes(place.name)) {
+            //         return prev;
+            //     }
+            //     return [...(prev || []), place.name];
+            //     });
+
+                // setPlanData((prev: planData| undefined) => (
                 //     {
                 //     ...prev,
                 //     place: [
@@ -51,10 +61,6 @@ const AutoComplete = ({setRes, setNames, planData, setPlanData}:AutoCompleteProp
                 //   }));
             });
     }
-        
-    // useEffect(() => {
-    //         console.log('>>>>>>>>>',planData);
-    // },[planData])
  
  return (
     <div className="mb-3">

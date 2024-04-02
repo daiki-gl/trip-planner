@@ -7,7 +7,7 @@ const Home = () => {
     const { user, getUser } = useUserStore()
     const {createPlan, getPlans, tourPlans} = useTourPlanStore()
     const navigate = useNavigate()
-    const [ token, setToken ] = useState<any>(null)
+    const [ token, setToken ] = useState<string | null>(null)
     
     useEffect(() => {
       const _token = window.localStorage.getItem("token")
@@ -22,15 +22,15 @@ const Home = () => {
     
     useEffect(() => {
       user && user.id && getPlans(user.id)
-      console.log(user);
     },[user])
 
     const createNewPlan = async() => {
-     const res = await createPlan(token)
-     const newPlan = await res?.json()
-     newPlan._id && navigate(`/plan/edit/${newPlan._id}`)
+      if(token) {
+        const res = await createPlan(token)
+        const newPlan = await res?.json()
+        newPlan._id && navigate(`/plan/edit/${newPlan._id}`)
+      }
     }
-
 
   return (
     <div>
@@ -48,7 +48,7 @@ const Home = () => {
         </div>
       )}
 
-      <div className="container mx-auto my-8">
+      <div className="container my-8 px-3">
         <h3 className="text-3xl font-bold mb-3">Your Plan <span className='text-sm'> (name: {user?.username})</span></h3>
         <div className="grid grid-cols-4 gap-4">
         {tourPlans && tourPlans?.length > 0 && tourPlans.map(plan => (

@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom'
 import { BsTrash } from 'react-icons/bs'
 import { FiEdit } from 'react-icons/fi'
 import { useTourPlanStore } from '../store'
-import { Place } from '../store/useTourPlanStore'
+import { Place } from '../types/index.type'
+
 
 type TourPlanProps = { 
     _id?: string | null,

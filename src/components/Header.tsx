@@ -11,7 +11,6 @@ const Header = () => {
             const _token = window.localStorage.getItem("token")
             if(!_token) {navigate('/login')}
         }
-        console.log({user});
     },[])
 
     const logoutUser = () => {

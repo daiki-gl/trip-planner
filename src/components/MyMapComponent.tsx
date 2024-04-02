@@ -2,51 +2,51 @@ import { useState, useEffect, useRef } from 'react'
 import Marker from './Map/Marker';
 import { useLocation, useParams } from 'react-router-dom';
 import { useTourPlanStore } from '../store';
-import { Place } from '../store/useTourPlanStore';
+import { KeyVal } from '../helper';
+import { Place } from '../types/index.type';
 
 type MyMapComponentProps = {
-    res?: any,
-    place?: Place
+    res?: {
+        location: google.maps.LatLng,
+        name: string
+    },
+    place?: Place[]
     originDestination?: {
-    //   origin: Place
-      origin: {
-        lat: any,
-        lng: any
-      }
-      destination: {
-        lat: any,
-        lng: any
-      }
-    //   destination: Place
+    origin?: google.maps.LatLng
+    destination?: google.maps.LatLng
     }
   }
 
+  type LatLngType = {
+    lat: number
+    lng: number
+  }
+
 function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
+// function MyMapComponent({res, place}:MyMapComponentProps) {
         const ref = useRef<HTMLDivElement>(null);
         const [map, setMap] = useState<google.maps.Map>();
-        const [places, setPlaces] = useState<any>([]);
+        const [places, setPlaces] = useState<Place[]>([]);
         const {updatePlan} = useTourPlanStore()
         const { id } = useParams()
-        const [newLatLng, setNewLatLng] = useState<any>()
+        const [newLatLng, setNewLatLng] = useState<LatLngType>()
         const {pathname} = useLocation()
 
-        const saveData = (val:string[], key: string) => {
-            if(id) {
-                // console.log(val, key, id);
-                updatePlan(val, key, id)
-            }
+        const saveData = (val:Place[], key: string) => {
+            id && updatePlan(val, key as keyof KeyVal, id)
         }
 
         useEffect(() => {
             if(place && place.length > 0) {
-                console.log({place});
-                setNewLatLng({lat: place[place.length - 1]?.location?.lat, lng: place[place.length - 1]?.location?.lng})
+                const lat = Number(place[place.length - 1]?.location.lat)
+                const lng = Number(place[place.length - 1]?.location.lng)
+                setNewLatLng({lat, lng})
             }
         },[place])
         
         useEffect(() => {
           ref.current && newLatLng && setMap(new window.google.maps.Map(ref.current, {center:{lat: newLatLng.lat, lng: newLatLng.lng},zoom: 12,}));
-          setPlaces(place)
+          place && setPlaces(place)
         },[newLatLng])
 
         // Make map
@@ -57,9 +57,7 @@ function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
         }, [ref, map]);
 
         useEffect(() => {
-            // console.log(res, places);
-            res && setPlaces((prev:any) => {
-                console.log({prev});
+            res && setPlaces((prev) => {
                return [...(prev || []), res]
             }
             );
@@ -74,14 +72,13 @@ function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
         },[res])
 
         useEffect(() => {
-        // console.log({places});
-        places?.length > 0 && saveData(places, 'place')
+            places?.length > 0 && saveData(places, 'place')
         },[places])
 
-        const directionsServiceRef = useRef<any>(null);
-        const directionsRendererRef = useRef<any>(null);
-        const [originLatLng, setOriginLatLng] = useState<any>(null);
-        const [destinationLatLng, setDestinationLatLng] = useState<any>(null);
+        const directionsServiceRef = useRef<google.maps.DirectionsService | null>(null);
+        const directionsRendererRef = useRef<google.maps.DirectionsRenderer | null>(null);
+        const [originLatLng, setOriginLatLng] = useState<google.maps.LatLng | null>(null);
+        const [destinationLatLng, setDestinationLatLng] = useState<google.maps.LatLng | null>(null);
 
         if(!pathname.includes('edit')) {
             // Optimize root
@@ -89,12 +86,11 @@ function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
             useEffect(() => {
 
                 if(originDestination?.origin && originDestination?.destination) {
-                //     // console.log('>>>>>>>>>>>>>',originDestination);
                     const {origin, destination} = originDestination
+                    setOriginLatLng(new google.maps.LatLng(Number(origin.lat), Number(origin.lng)))
+                    setDestinationLatLng(new google.maps.LatLng(Number(destination.lat), Number(destination.lng)))
                 // const originLatLng = new google.maps.LatLng(origin.lat, origin.lng);
                 // const destinationLatLng = new google.maps.LatLng(destination.lat, destination.lng);
-                setOriginLatLng(new google.maps.LatLng(origin.lat, origin.lng))
-                setDestinationLatLng(new google.maps.LatLng(destination.lat, destination.lng))
             
                 //       const directionsService = new google.maps.DirectionsService();
                 //       const directionsRenderer = new google.maps.DirectionsRenderer({ map });
@@ -106,7 +102,6 @@ function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
                 //       };
         
                 //       directionsService.route(request, function (result, status) {
-                //         // console.log(request);
                 //         if (status === 'OK') {
                 //           directionsRenderer.setDirections(result);
                 //         }
@@ -125,20 +120,20 @@ function MyMapComponent({res, place, originDestination}:MyMapComponentProps) {
                 const request = {
                   origin: originLatLng,
                   destination: destinationLatLng,
-                  travelMode: 'DRIVING',
+                  travelMode: 'DRIVING' as google.maps.TravelMode,
                 };
-                directionsServiceRef.current.route(request, (result:any, status:any) => {
-                    if (status === 'OK') {
-                        directionsRendererRef.current.setDirections(result);
-                    }
-                });
+                    directionsServiceRef.current?.route(request as google.maps.DirectionsRequest, (result, status) => {
+                           if (status === 'OK') {
+                               directionsRendererRef.current?.setDirections(result);
+                           }
+                       });
             };
         }
       
     return (
         <>
             <div className='w-3/4 gmap' ref={ref} >
-                {places?.length > 0 && places.map((latLng:any, i:number) => (
+                {map && places?.length > 0 && places.map((latLng, i:number) => (
                     <Marker key={i} map={map} data={latLng.location} />
                 ))}
             </div>

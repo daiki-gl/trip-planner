@@ -6,20 +6,22 @@ import { Link } from 'react-router-dom'
 import Map from '../components/Map/Map'
 import AutoComplete from '../components/Map/Autocomplete'
 import PlaceName from '../components/PlaceName'
+import { Place, PlanData } from '../types/index.type'
+import { KeyVal } from '../helper'
 // import { Place } from '../store/useTourPlanStore'
 
 const UpdatePlan = () => {
     const {updatePlan, getPlanById} = useTourPlanStore()
     const { id } = useParams()
-    const [res, setRes] = useState()
-    const [planData, setPlanData] = useState<any>()
-    const [names, setNames] = useState<any>()
+    const [res, setRes] = useState<Place>()
+    const [planData, setPlanData] = useState<PlanData>()
+    const [names, setNames] = useState<string[]>()
 
     const saveData = (e:React.FocusEvent<HTMLTextAreaElement, Element> | React.FocusEvent<HTMLInputElement, Element>) => {
         const val = e.target.value
         const key = e.target.name
         if(id) {
-            updatePlan(val, key, id)
+            updatePlan(val, key as keyof KeyVal, id)
         }
     }
 
@@ -27,11 +29,13 @@ const UpdatePlan = () => {
         (async() => {
             id && setPlanData(await getPlanById(id))
         })()
-    },[])
 
+    },[])
+    
     useEffect(() => {
-        setNames(planData && planData.place.length > 0 && planData?.place.map((place:any) => place.name))
-        // console.log(planData?.place);
+        if(planData && planData.place.length > 0) {
+            setNames(planData?.place.map((place) => place.name))
+        }
     },[planData])
 
   return (
@@ -57,12 +61,12 @@ const UpdatePlan = () => {
             </div>
 
             <div className='mb-3'>
-                <AutoComplete setRes={setRes} setNames={setNames} setPlanData={setPlanData} planData={planData} />
+                <AutoComplete setRes={setRes} setNames={setNames} setPlanData={setPlanData} planData={planData} names={names} />
                 <ul>
-                    {planData?.place?.length > 0 && planData.place?.map((place:any) => (
+                    {planData && planData?.place?.length > 0 && planData.place?.map((place) => (
                     <PlaceName key={place.name} data={planData.place} name={place.name} id={planData._id} setPlanData={setPlanData} />
                     ))}
-                    {/* {planData && names?.length > 0 && names.map((name:any) => (
+                    {/* {names && planData && names?.length > 0 && names.map((name) => (
                     <PlaceName key={name} data={planData?.place} name={name} id={planData._id} setPlanData={setPlanData} />
                     ))} */}
                 </ul>

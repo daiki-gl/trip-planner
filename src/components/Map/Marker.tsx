@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-const Marker = ({map, data}:any) => {
+type latLngType = {
+  map: google.maps.Map,
+  position: google.maps.LatLng
+}
+
+const Marker = ({map, data}: {map: google.maps.Map, data: google.maps.LatLng}) => {
     const [marker, setMarker] = useState<google.maps.Marker>();
-    const [latLng, setLatLng ] = useState<any>()
+    const [latLng, setLatLng ] = useState<latLngType>()
+    // const [latLng, setLatLng ] = useState<google.maps.LatLng>()
 
           useEffect(() => {
             if (!marker) {
@@ -11,15 +17,16 @@ const Marker = ({map, data}:any) => {
             return () => {
               if (marker) marker.setMap(null);
             };
-          },[marker])
 
+          },[marker])
+          
           useEffect(() => {
             setLatLng({map,position:data})
           }, [marker, data]);
           
           useEffect(() => {
-            if (marker) {
-              marker.setOptions(latLng);
+            if (marker && latLng) {
+              marker.setOptions(latLng as google.maps.MarkerOptions);
             }
           },[latLng])
 
