@@ -1,6 +1,6 @@
 # Trip Planner
 
-### Link: [https://trip-planner-xi.vercel.app/login](https://trip-planner-xi.vercel.app/login)
+### Link: [https://trip-planner-xi.vercel.app/](https://trip-planner-xi.vercel.app/login)
 
 ## Overview
 
